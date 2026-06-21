@@ -83,7 +83,7 @@
                         <a asp-controller="Cart" asp-action="Index" class="header-action-btn cart-btn">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="d-none d-md-inline">Giỏ hàng</span>
-                            <span class="cart-badge" id="cartCount">0</span>
+                            @await Component.InvokeAsync("CartSummary")
                         </a>
                     </div>
                 </div>

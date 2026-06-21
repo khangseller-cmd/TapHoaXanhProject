@@ -27,7 +27,25 @@ namespace NguyenDinhMinhKhang_2380600989.Controllers
         public async Task<IActionResult> AddToCart(int productId, int quantity = 1)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Thêm sản phẩm vào giỏ
             await _cartService.AddToCartAsync(userId, productId, quantity);
+
+            // Lấy tổng số lượng mới
+            var cartCount = await _cartService.GetCartItemCountAsync(userId);
+
+            // Nếu là AJAX request, trả về JSON
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return Json(new
+                {
+                    success = true,
+                    cartCount = cartCount,
+                    message = "Đã thêm vào giỏ hàng!"
+                });
+            }
+
+            // Nếu không phải AJAX, redirect như cũ
             TempData["Success"] = "Đã thêm vào giỏ hàng!";
             return RedirectToAction("Detail", "Home", new { id = productId });
         }

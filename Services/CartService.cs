@@ -70,5 +70,16 @@ namespace NguyenDinhMinhKhang_2380600989.Services
                 await _context.SaveChangesAsync();
             }
         }
+
+        // Method mới: Lấy tổng số lượng sản phẩm trong giỏ hàng
+        public async Task<int> GetCartItemCountAsync(string userId)
+        {
+            if (string.IsNullOrEmpty(userId)) return 0;
+
+            var cart = await GetCartByUserIdAsync(userId);
+            if (cart == null || cart.CartItems == null) return 0;
+
+            return cart.CartItems.Sum(ci => ci.Quantity);
+        }
     }
 }
