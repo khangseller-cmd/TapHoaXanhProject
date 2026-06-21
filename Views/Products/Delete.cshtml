@@ -1,0 +1,52 @@
+﻿@model NguyenDinhMinhKhang_2380600989.Models.Product
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+}
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card shadow-sm border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Xác nhận xóa</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">Bạn có chắc muốn xóa sản phẩm này?</p>
+
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="@(Model.MainImage ?? "https://via.placeholder.com/150")"
+                                     style="width: 100%; border-radius: 8px;" />
+                            </div>
+                            <div class="col-md-8">
+                                <h5>@Model.Name</h5>
+                                <p class="text-muted">@Model.Category?.Name</p>
+                                <p class="text-success fw-bold fs-5">
+                                    @Model.Price.ToString("N0", new System.Globalization.CultureInfo("vi-VN")) đ
+                                </p>
+                                <p><strong>Tồn kho:</strong> @Model.StockQuantity</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning mt-3">
+                    <i class="fas fa-info-circle"></i> Sản phẩm sẽ được đánh dấu là đã xóa (soft delete), không ảnh hưởng đến đơn hàng đã đặt.
+                </div>
+
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Xác nhận xóa
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

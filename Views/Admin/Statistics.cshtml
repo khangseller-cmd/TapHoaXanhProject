@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Thống kê doanh thu";
+    var monthlyRevenue = ViewBag.MonthlyRevenue as List<NguyenDinhMinhKhang_2380600989.Controllers.MonthlyRevenue>;
+}
+
+<h2 class="fw-bold text-success mb-4">
+    <i class="fas fa-chart-line"></i> Thống kê doanh thu
+</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow-sm">
+            <div class="card-body">
+                <h6>Tổng doanh thu</h6>
+                <h2 class="fw-bold">@((decimal)ViewBag.TotalRevenue).ToString("N0", new System.Globalization.CultureInfo("vi-VN")) đ</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-primary text-white shadow-sm">
+            <div class="card-body">
+                <h6>Tổng đơn hàng hoàn thành</h6>
+                <h2 class="fw-bold">@ViewBag.TotalOrders</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-info text-white shadow-sm">
+            <div class="card-body">
+                <h6>Giá trị đơn hàng trung bình</h6>
+                <h2 class="fw-bold">@((decimal)ViewBag.AverageOrderValue).ToString("N0", new System.Globalization.CultureInfo("vi-VN")) đ</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0"><i class="fas fa-calendar"></i> Doanh thu theo tháng</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Tháng</th>
+                    <th>Năm</th>
+                    <th>Số đơn hàng</th>
+                    <th>Doanh thu</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (monthlyRevenue != null && monthlyRevenue.Any())
+                {
+                    @foreach (var item in monthlyRevenue)
+                    {
+                        <tr>
+                            <td>Tháng @item.Month</td>
+                            <td>@item.Year</td>
+                            <td>@item.OrderCount</td>
+                            <td class="text-success fw-bold">@item.Total.ToString("N0", new System.Globalization.CultureInfo("vi-VN")) đ</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">Chưa có dữ liệu</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

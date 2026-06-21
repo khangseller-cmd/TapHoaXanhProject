@@ -1,0 +1,65 @@
+﻿@model NguyenDinhMinhKhang_2380600989.Models.Category
+@{
+    ViewData["Title"] = "Xóa danh mục";
+    var hasOrders = ViewBag.HasOrders as bool? ?? false;
+    var productCount = ViewBag.ProductCount as int? ?? 0;
+}
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card shadow-sm border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-exclamation-triangle"></i> Xác nhận xóa danh mục
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">Bạn có chắc muốn xóa danh mục này?</p>
+
+                <div class="card bg-light mb-3">
+                    <div class="card-body">
+                        <h5 class="text-success">@Model.Name</h5>
+                        <p class="text-muted mb-1">@Model.Description</p>
+                        <p class="mb-0"><strong>Số sản phẩm:</strong> @productCount</p>
+                    </div>
+                </div>
+
+                @if (hasOrders)
+                {
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Lưu ý quan trọng:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Danh mục này có sản phẩm đã được đặt hàng</li>
+                            <li>Khi xóa, các đơn hàng đã đặt <strong>KHÔNG BỊ ẢNH HƯỞNG</strong></li>
+                            <li>Hệ thống sẽ sử dụng <strong>Soft Delete</strong> (xóa mềm)</li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <strong>Cảnh báo:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>@productCount sản phẩm thuộc danh mục này cũng sẽ bị xóa</li>
+                            <li>Các sản phẩm sẽ được đánh dấu IsDeleted = true</li>
+                        </ul>
+                    </div>
+                }
+
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger flex-fill">
+                            <i class="fas fa-trash"></i> Xác nhận xóa
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary flex-fill">
+                            <i class="fas fa-times"></i> Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

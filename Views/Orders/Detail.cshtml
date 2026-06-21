@@ -1,0 +1,96 @@
+﻿@model NguyenDinhMinhKhang_2380600989.Models.Order
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng #" + Model.Id;
+}
+
+<h2 class="fw-bold text-success mb-4">
+    <i class="fas fa-receipt"></i> Chi tiết đơn hàng #@Model.Id
+</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Sản phẩm đã đặt</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderDetails)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@item.ProductNameSnapshot</strong>
+                                </td>
+                                <td>@item.UnitPrice.ToString("N0", new System.Globalization.CultureInfo("vi-VN")) đ</td>
+                                <td>@item.Quantity</td>
+                                <td class="fw-bold">@item.TotalPrice.ToString("N0", new System.Globalization.CultureInfo("vi-VN")) đ</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-success">
+                            <th colspan="3" class="text-end">Tổng cộng:</th>
+                            <th class="fs-5">@Model.TotalAmount.ToString("N0", new System.Globalization.CultureInfo("vi-VN")) đ</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Thông tin đơn hàng</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Mã đơn:</strong> #@Model.Id</p>
+                <p><strong>Ngày đặt:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+                <p><strong>Trạng thái:</strong></p>
+                @switch (Model.Status)
+                {
+                    case NguyenDinhMinhKhang_2380600989.Models.OrderStatus.Pending:
+                        <span class="badge bg-warning text-dark fs-6">Chờ xác nhận</span>
+                        break;
+                    case NguyenDinhMinhKhang_2380600989.Models.OrderStatus.Confirmed:
+                        <span class="badge bg-info text-dark fs-6">Đã xác nhận</span>
+                        break;
+                    case NguyenDinhMinhKhang_2380600989.Models.OrderStatus.Processing:
+                        <span class="badge bg-primary fs-6">Đang xử lý</span>
+                        break;
+                    case NguyenDinhMinhKhang_2380600989.Models.OrderStatus.Shipping:
+                        <span class="badge bg-primary fs-6">Đang giao</span>
+                        break;
+                    case NguyenDinhMinhKhang_2380600989.Models.OrderStatus.Completed:
+                        <span class="badge bg-success fs-6">Hoàn thành</span>
+                        break;
+                    case NguyenDinhMinhKhang_2380600989.Models.OrderStatus.Cancelled:
+                        <span class="badge bg-danger fs-6">Đã hủy</span>
+                        break;
+                }
+                <hr>
+                <h6 class="fw-bold">Thông tin giao hàng:</h6>
+                <p><strong>Người nhận:</strong> @Model.ReceiverName</p>
+                <p><strong>Số điện thoại:</strong> @Model.Phone</p>
+                <p><strong>Địa chỉ:</strong> @Model.ShippingAddress</p>
+                @if (!string.IsNullOrEmpty(Model.Notes))
+                {
+                    <p><strong>Ghi chú:</strong> @Model.Notes</p>
+                }
+            </div>
+        </div>
+
+        <a asp-action="Index" class="btn btn-outline-secondary w-100 mt-3">
+            <i class="fas fa-arrow-left"></i> Quay lại danh sách
+        </a>
+    </div>
+</div>

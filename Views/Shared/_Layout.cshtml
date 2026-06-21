@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Tạp Hóa Xanh</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container-fluid">
+            <div class="row align-items-center py-2">
+                <!-- Logo -->
+                <div class="col-6 col-md-3">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Tạp Hóa Xanh</span>
+                    </a>
+                </div>
+
+                <!-- Search Box -->
+                <div class="col-12 col-md-6 my-3 my-md-0">
+                    <form class="search-box" asp-controller="Home" asp-action="QuickSearch" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." required />
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+
+                <!-- User Actions -->
+                <div class="col-6 col-md-3 text-end">
+                    <div class="header-actions">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="dropdown">
+                                <a class="header-action-btn dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span class="d-none d-md-inline">@User.Identity.Name</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage"><i class="fas fa-user"></i> Tài khoản</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Orders" asp-action="Index"><i class="fas fa-receipt"></i> Đơn hàng</a></li>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard"><i class="fas fa-crown text-danger"></i> Admin</a></li>
+                                    }
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" method="post" class="dropdown-item">
+                                            <button type="submit" class="btn btn-link text-danger p-0"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a asp-area="Identity" asp-page="/Account/Login" class="header-action-btn">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span class="d-none d-md-inline">Đăng nhập</span>
+                            </a>
+                            <a asp-area="Identity" asp-page="/Account/Register" class="header-action-btn">
+                                <i class="fas fa-user-plus"></i>
+                                <span class="d-none d-md-inline">Đăng ký</span>
+                            </a>
+                        }
+                        <a asp-controller="Cart" asp-action="Index" class="header-action-btn cart-btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="d-none d-md-inline">Giỏ hàng</span>
+                            <span class="cart-badge" id="cartCount">0</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Menu -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">
+                            <i class="fas fa-home"></i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Products">
+                            <i class="fas fa-th"></i> Tất cả sản phẩm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Products" asp-route-categoryId="1">
+                            <i class="fas fa-apple-alt"></i> Thực phẩm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Products" asp-route-categoryId="2">
+                            <i class="fas fa-wine-bottle"></i> Đồ uống
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Products" asp-route-categoryId="3">
+                            <i class="fas fa-pepper-hot"></i> Gia vị
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Products" asp-route-categoryId="4">
+                            <i class="fas fa-blender"></i> Đồ gia dụng
+                        </a>
+                    </li>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-danger" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-crown"></i> Quản trị
+                            </a>
+                            <ul class="dropdown-menu">
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Products" asp-action="Create"><i class="fas fa-plus"></i> Thêm sản phẩm</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Categories" asp-action="Index"><i class="fas fa-folder"></i> Quản lý danh mục</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users"><i class="fas fa-users"></i> Quản lý nhân viên</a></li>
+                                }
+                                <li><a class="dropdown-item" asp-controller="Products" asp-action="Index"><i class="fas fa-box"></i> Sản phẩm</a></li>
+                                <li><a class="dropdown-item" asp-controller="Orders" asp-action="Index"><i class="fas fa-receipt"></i> Đơn hàng</a></li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container mt-4">
+            <!-- Toast Notifications -->
+            <div id="toastContainer"></div>
+
+            @RenderBody()
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5><i class="fas fa-shopping-cart"></i> Tạp Hóa Xanh</h5>
+                    <p>Thực phẩm tươi ngon, chất lượng cao với giá cả phải chăng. Giao hàng nhanh trong 2 giờ!</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Liên kết nhanh</h5>
+                    <ul class="list-unstyled">
+                        <li><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                        <li><a asp-controller="Home" asp-action="Products">Sản phẩm</a></li>
+                        <li><a asp-controller="Cart" asp-action="Index">Giỏ hàng</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Liên hệ</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-phone"></i> 1900 xxxx</li>
+                        <li><i class="fas fa-envelope"></i> support@taphoaxanh.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> TP. Hồ Chí Minh</li>
+                    </ul>
+                </div>
+            </div>
+            <hr />
+            <div class="text-center">
+                <p>&copy; @DateTime.Now.Year Tạp Hóa Xanh. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

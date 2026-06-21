@@ -1,0 +1,55 @@
+﻿@model NguyenDinhMinhKhang_2380600989.Models.Order
+@{
+    ViewData["Title"] = "Xác nhận đơn hàng";
+}
+
+<h2 class="fw-bold text-success mb-4">
+    <i class="fas fa-clipboard-check"></i> Xác nhận đơn hàng
+</h2>
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Thông tin giao hàng</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="ReceiverName" class="form-label fw-bold">Người nhận</label>
+                        <input asp-for="ReceiverName" class="form-control" required />
+                        <span asp-validation-for="ReceiverName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Phone" class="form-label fw-bold">Số điện thoại</label>
+                        <input asp-for="Phone" class="form-control" required />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ShippingAddress" class="form-label fw-bold">Địa chỉ giao hàng</label>
+                        <textarea asp-for="ShippingAddress" class="form-control" rows="3" required></textarea>
+                        <span asp-validation-for="ShippingAddress" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Notes" class="form-label fw-bold">Ghi chú (tùy chọn)</label>
+                        <textarea asp-for="Notes" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-check"></i> Xác nhận đặt hàng
+                        </button>
+                        <a asp-controller="Cart" asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

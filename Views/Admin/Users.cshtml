@@ -1,0 +1,62 @@
+﻿@model List<NguyenDinhMinhKhang_2380600989.Controllers.UserViewModel>
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-success">
+        <i class="fas fa-users"></i> Quản lý người dùng
+    </h2>
+    <a asp-action="AddStaff" class="btn btn-success">
+        <i class="fas fa-user-plus"></i> Thêm nhân viên
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead class="table-success">
+                <tr>
+                    <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th>Vai trò</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.Email</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>
+                            @if (user.Roles.Contains("Admin"))
+                            {
+                                <span class="badge bg-danger">Admin</span>
+                            }
+                            else if (user.Roles.Contains("Staff"))
+                            {
+                                <span class="badge bg-primary">Staff</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Customer</span>
+                            }
+                        </td>
+                        <td>
+                            @if (user.Roles.Contains("Staff"))
+                            {
+                                <form asp-action="RemoveStaff" method="post" class="d-inline">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa nhân viên này?')">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

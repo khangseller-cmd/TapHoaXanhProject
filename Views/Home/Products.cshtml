@@ -1,0 +1,109 @@
+﻿@model IEnumerable<NguyenDinhMinhKhang_2380600989.Models.Product>
+@{
+    ViewData["Title"] = "Tất cả sản phẩm";
+    var categories = ViewBag.Categories as List<NguyenDinhMinhKhang_2380600989.Models.Category>;
+    var selectedCategory = ViewBag.SelectedCategory as int?;
+    var searchTerm = ViewBag.SearchTerm as string;
+}
+
+<!-- Thông báo tìm kiếm -->
+@if (TempData["SearchNotFound"] != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle"></i> @TempData["SearchNotFound"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(searchTerm))
+{
+    <div class="alert alert-info" role="alert">
+        <i class="fas fa-search"></i> Kết quả tìm kiếm cho: <strong>"@searchTerm"</strong>
+        <a asp-action="Products" class="btn btn-sm btn-outline-secondary ms-2">
+            <i class="fas fa-times"></i> Xóa bộ lọc
+        </a>
+    </div>
+}
+
+<h2 class="fw-bold text-success mb-4">
+    <i class="fas fa-th"></i> Tất cả sản phẩm
+</h2>
+
+<!-- Category Filter -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex gap-2 flex-wrap">
+            <a asp-action="Products" class="btn @(selectedCategory == null ? "btn-success" : "btn-outline-success") btn-sm">
+                Tất cả
+            </a>
+            @if (categories != null)
+            {
+                @foreach (var cat in categories)
+                {
+                    <a asp-action="Products" asp-route-categoryId="@cat.Id"
+                       class="btn @(selectedCategory == cat.Id ? "btn-success" : "btn-outline-success") btn-sm">
+                        @cat.Name
+                    </a>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Products Grid -->
+@if (Model.Any())
+{
+    <div class="product-grid">
+        @foreach (var product in Model)
+        {
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    @if (product.StockQuantity < 10 && product.StockQuantity > 0)
+                    {
+                        <span class="product-badge hot">Sắp hết</span>
+                    }
+                    <img src="@(product.MainImage ?? "https://via.placeholder.com/300x300/2ecc71/ffffff?text=San+pham")"
+                         alt="@product.Name">
+                </div>
+                <div class="product-info">
+                    <div class="product-category">
+                        <i class="fas fa-tag"></i> @product.Category?.Name
+                    </div>
+                    <h5 class="product-name" title="@product.Name">@product.Name</h5>
+                    <div class="product-price">
+                        <span class="price-current">@product.Price.ToString("N0", new System.Globalization.CultureInfo("vi-VN"))</span>
+                        <span class="price-unit">đ</span>
+                    </div>
+                    <div class="product-stock mb-2">
+                        <i class="fas fa-box"></i> Còn: @product.StockQuantity
+                    </div>
+                    <a asp-controller="Home" asp-action="Detail"
+                       asp-route-id="@product.Id"
+                       asp-route-slug="@product.Slug" class="btn-add-cart">
+                        <i class="fas fa-eye"></i> Xem chi tiết
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="fas fa-box-open fa-5x text-muted mb-3"></i>
+        <h4>Không có sản phẩm nào</h4>
+        <p class="text-muted">
+            @if (!string.IsNullOrEmpty(searchTerm))
+            {
+                <text>Không tìm thấy sản phẩm nào có tên <strong>"@searchTerm"</strong></text>
+            }
+            else
+            {
+                <text>Chưa có sản phẩm nào trong danh mục này</text>
+            }
+        </p>
+        <a asp-action="Products" class="btn btn-success">
+            <i class="fas fa-arrow-left"></i> Xem tất cả sản phẩm
+        </a>
+    </div>
+}
